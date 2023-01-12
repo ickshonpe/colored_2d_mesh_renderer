@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy::render::mesh::Indices;
+use bevy::render::mesh::MeshVertexAttribute;
+use bevy::render::render_resource::VertexFormat;
 use bevy::sprite::Mesh2dHandle;
 use colored_2d_mesh_renderer::*;
 
@@ -7,9 +9,9 @@ pub(crate) fn an_rect(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
 ) {
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    commands.spawn(Camera2dBundle::default());
     let mut rect_mesh = Mesh::new(
-        bevy::render::render_resource::PrimitiveTopology::TriangleList
+        bevy::render::render_resource::PrimitiveTopology::LineList
     );
 
     let min = 0.0;
@@ -26,10 +28,13 @@ pub(crate) fn an_rect(
     let colors = vec![color; 4];
 
     rect_mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, vertices);
-    rect_mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
+    rect_mesh.insert_attribute(
+        MeshVertexAttribute::new("Vertex_Color", 1, VertexFormat::Uint32),
+         colors
+    );
     rect_mesh.set_indices(Some(indices));
     
-    commands.spawn_bundle((
+    commands.spawn((
         ColoredMesh2d::default(),
         Transform::from_translation(900.0 * Vec3::Z),
         GlobalTransform::default(),
@@ -56,10 +61,13 @@ pub(crate) fn an_rect(
     let colors = vec![color; 4];
 
     rect_mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, vertices);
-    rect_mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
+    rect_mesh.insert_attribute(
+        MeshVertexAttribute::new("Vertex_Color", 1, VertexFormat::Uint32),
+         colors
+    );
     rect_mesh.set_indices(Some(indices));
 
-    commands.spawn_bundle((
+    commands.spawn((
         ColoredMesh2d::default(),
         Transform::from_translation(-120.0 * Vec3::X + 1.0 * Vec3::Z),
         GlobalTransform::default(),

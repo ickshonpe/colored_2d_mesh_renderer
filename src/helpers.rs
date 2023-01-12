@@ -1,7 +1,9 @@
 use bevy::ecs::system::SystemParam;
 use bevy::prelude::*;
 use bevy::render::mesh::Indices;
+use bevy::render::mesh::MeshVertexAttribute;
 use bevy::render::mesh::PrimitiveTopology;
+use bevy::render::render_resource::VertexFormat;
 use bevy::sprite::Mesh2dHandle;
 use crate::ColoredMesh2dBundle;
 
@@ -92,8 +94,13 @@ impl ColoredMesh2dBuilder<'_, '_> {
         transform: Transform,
     ) -> ColoredMesh2dBundle {
         let mut mesh = Mesh::new(topology);
+        // mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, vertices);
+        // mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
         mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, vertices);
-        mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, colors);
+        mesh.insert_attribute(
+            MeshVertexAttribute::new("Vertex_Color", 1, VertexFormat::Uint32),
+             colors
+        );
         mesh.set_indices(Indices::U32(indices).into());
         let mesh_handle = self.meshes.add(mesh);
         ColoredMesh2dBundle {
@@ -113,7 +120,7 @@ impl ColoredMesh2dBuilder<'_, '_> {
     ) -> (Entity, Handle<Mesh>) {
         let mesh_bundle = self.make_mesh_bundle(vertices, colors, indices, topology, transform);
         let mesh_handle = mesh_bundle.mesh_2d_handle.0.clone();
-        let id = self.commands.spawn_bundle(mesh_bundle).id();
+        let id = self.commands.spawn(mesh_bundle).id();
         (id, mesh_handle)
     }
 
@@ -124,7 +131,7 @@ impl ColoredMesh2dBuilder<'_, '_> {
     ) -> (Entity, Handle<Mesh>) {
         let mesh_bundle = self.make_mesh_bundle(quads.buffer.vertices, quads.buffer.colors, quads.buffer.indices, PrimitiveTopology::TriangleList, transform);
         let mesh_handle = mesh_bundle.mesh_2d_handle.0.clone();
-        let id = self.commands.spawn_bundle(mesh_bundle).id();
+        let id = self.commands.spawn(mesh_bundle).id();
         (id, mesh_handle)
     }
 }

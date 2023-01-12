@@ -6,7 +6,7 @@ use colored_2d_mesh_renderer::helpers::*;
 fn spawn_camera(
     mut commands: Commands,
 ) {
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn spawn_quads(
@@ -25,9 +25,6 @@ fn main() {
     .add_plugins(DefaultPlugins)
     .add_plugin(ColoredMesh2dPlugin)
     .add_startup_system(spawn_camera)
-    .add_startup_system( spawn_quads)
-    .add_system(
-        spawn_quads
-    )
+    .add_startup_system(spawn_quads)
     .run();
 }
